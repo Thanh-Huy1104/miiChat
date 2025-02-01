@@ -14,7 +14,7 @@ import HotspotList from "./HotSpotList";
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeComponent, setActiveComponent] = useState("login"); // Default to Login
-  const { userID } = useAuth();
+  const { user } = useAuth();
 
   return (
     <div
@@ -49,7 +49,7 @@ export default function Sidebar() {
         {/* Voting Button (Disabled if not logged in) */}
         <button
           onClick={() => {
-            if (userID) {
+            if (user) {
               setIsExpanded(true);
               setActiveComponent("voting");
             }
@@ -57,11 +57,11 @@ export default function Sidebar() {
             setActiveComponent("hotspotList");
           }}
           className={`flex items-center justify-center w-12 h-12 rounded-lg transition my-2 ${
-            userID
+            user
               ? "text-gray-600 hover:text-gray-900 hover:bg-gray-200"
               : "text-gray-300 cursor-not-allowed opacity-50"
           }`}
-          disabled={!userID}
+          disabled={!user}
         >
           <FontAwesomeIcon icon={faCheckToSlot} size="lg" color="#050505" />
         </button>
@@ -69,17 +69,17 @@ export default function Sidebar() {
         {/* Settings Button (Disabled if not logged in) */}
         <button
           onClick={() => {
-            if (userID) {
+            if (user) {
               setIsExpanded(true);
               setActiveComponent("settings");
             }
           }}
           className={`flex items-center justify-center w-12 h-12 rounded-lg transition my-2 ${
-            userID
+            user
               ? "text-gray-600 hover:text-gray-900 hover:bg-gray-200"
               : "text-gray-300 cursor-not-allowed opacity-50"
           }`}
-          disabled={!userID}
+          disabled={!user}
         >
           <FontAwesomeIcon icon={faGear} size="lg"             color="#050505"
  />

@@ -1,17 +1,16 @@
 import { createContext, useState, useContext } from "react";
+import { IUser } from "../services/user.service";
 
 // Define the AuthContext type
 interface AuthContextType {
-  userID: string;
-  login: () => void;
-  logout: () => void;
+  user: IUser | null;
+  setUserData: (user: IUser | null) => void;
 }
 
 // Create the AuthContext
 const AuthContext = createContext<AuthContextType>({
-  userID: "",
-  login: () => {},
-  logout: () => {},
+  user: null,
+  setUserData: () => {},
 });
 
 // Custom hook for using AuthContext
@@ -21,20 +20,14 @@ export function useAuth() {
 
 // AuthProvider to wrap the entire app
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [userID, setUserID] = useState(""); // Null means not logged in
+  const [user, setUser] = useState<IUser | null>(null);
 
-  // Function to log in a user (simulating login)
-  const login = () => {
-    setUserID("123456"); // Example user ID
-  };
-
-  // Function to log out a user
-  const logout = () => {
-    setUserID("");
+  const setUserData = (user: IUser | null) => {
+    setUser(user);
   };
 
   return (
-    <AuthContext.Provider value={{ userID, login, logout }}>
+    <AuthContext.Provider value={{ user, setUserData }}>
       {children}
     </AuthContext.Provider>
   );

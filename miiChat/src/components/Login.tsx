@@ -1,17 +1,39 @@
-import { useState } from "react";
-import { useAuth } from "../context/authContext";
+import { useEffect, useState } from "react";
 import Abdul from "../assets/avatars/abdul.png";
 import AsianMom from "../assets/avatars/asian-mom.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../context/authContext";
+import { createUser, IUser, loginUser } from "../services/user.service";
 
 export default function Login() {
-  const { login, userID, logout } = useAuth();
+  const { user, setUserData } = useAuth();
 
   const profileImages = [Abdul, AsianMom, Abdul, AsianMom];
 
   const [selectedImage, setSelectedImage] = useState(profileImages[0]);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [profileImg, setProfileImg] = useState(0);
+
+  const createNewUser = async () => {
+    const newUser: IUser = await createUser({
+      username: username,
+      password: password,
+      profileImg: profileImg,
+    });
+    console.log("Creating new user...");
+    setUserData(newUser);
+  };
+
+  const login = async () => {
+    const user: IUser = await loginUser({ username, password });
+    console.log("Logging in...");
+    setUserData(user);
+  };
+  
+  const logout = () => {
+    setUserData(null);
+  };
 
   return (
     <div className="w-72 p-4">
@@ -20,7 +42,7 @@ export default function Login() {
         <h2 className="text-2xl font-bold text-gray-800">Login</h2>
       </div>
 
-      {userID ? (
+      {user ? (
         <>
           <p className="text-gray-600 text-center">You are logged in!</p>
           <button
@@ -53,6 +75,7 @@ export default function Login() {
                   <button
                     key={index}
                     onClick={() => {
+                      setProfileImg(index);
                       setSelectedImage(image);
                       setIsPopoverOpen(false);
                     }}
@@ -67,18 +90,21 @@ export default function Login() {
                 ))}
               </div>
             )}
-            
           </div>
 
           {/* Username and Password Fields */}
           <input
             type="text"
             placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="w-full p-2 mt-4 border rounded-lg focus:outline-black"
           />
           <input
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full p-2 mt-2 border rounded-lg focus:outline-black"
           />
 
@@ -92,7 +118,10 @@ export default function Login() {
 
           {/* Register Button */}
           <div className="flex items-center justify-center mt-2 w-full">
-            <button className="mt-2 text-gray-600 p-2 rounded-lg hover:bg-gray-200">
+            <button
+              onClick={createNewUser}
+              className="mt-2 text-gray-600 p-2 rounded-lg hover:bg-gray-200"
+            >
               Register
             </button>
           </div>
