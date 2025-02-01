@@ -1,11 +1,21 @@
 // src/components/ChatModal.jsx
+import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import { getMessages } from '../services/chat.service';
 
 // Set the root element for accessibility (do this once in your app, usually in App.jsx)
 Modal.setAppElement('#root');
 
-const ChatModal = ({ isOpen, onClose }) => {
-  return (
+const ChatModal = ({ isOpen, onClose, currentHotspot }) => {
+  const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    const fetchMessages = async() => {
+      const messages = await getMessages(currentHotspot);
+      setMessages(messages);
+    } 
+    fetchMessages();
+  }, [currentHotspot])
+    return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
