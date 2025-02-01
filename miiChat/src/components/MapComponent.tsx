@@ -24,6 +24,7 @@ export default function MapComponent() {
         options={{
           styles: MapStyle,
           disableDefaultUI: true,
+          draggingCursor: "pointer",
         }}
       >
         {spots.map((spot) => (
