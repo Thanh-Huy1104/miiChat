@@ -1,6 +1,8 @@
 import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import DefaultAvatar from "../../src/assets/images/default-notion.png";
 import AdvancedMarkerComponent from "./AdvancedMarker";
+import ChatModal from "./ChatModal";
+import { useState } from "react";
 
 const center = {
   lat: 45.497406,
@@ -190,29 +192,40 @@ const spots = [
   },
 ];
 
-export default function MapComponent() {
+export default function MapComponent({}) {
   const handleMarkerClick = (spot) => {
-    alert(`Clicked on ${spot.name}`);
+    setIsOpen(true);
+    setCurrentHotspot(spot);
   };
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentHotspot, setCurrentHotspot] = useState("");
+  const onClose = () => {
+
+  }
   return (
-    <APIProvider apiKey={"AIzaSyBGruP6k6Ypxn3TuP0JgUKPuahFwjuzSDI"}>
-      <Map
-        mapId="bd0a5137f1023dfc"
-        style={{ width: "100vw", height: "100vh" }}
-        defaultCenter={center}
-        defaultZoom={13}
-        gestureHandling={"greedy"}
-        disableDefaultUI={true}
-      >
-        {spots.map((spot) => (
-          <AdvancedMarkerComponent
-            key={spot.id}
-            position={{ lat: spot.lat, lng: spot.lng }}
-            imageSrc={DefaultAvatar}
-            onClick={() => handleMarkerClick(spot)}
-          />
-        ))}
-      </Map>
-    </APIProvider>
+    <div>
+      <APIProvider apiKey={"AIzaSyBGruP6k6Ypxn3TuP0JgUKPuahFwjuzSDI"}>
+        <Map
+          mapId="bd0a5137f1023dfc"
+          style={{ width: "100vw", height: "100vh" }}
+          defaultCenter={center}
+          defaultZoom={13}
+          gestureHandling={"greedy"}
+          disableDefaultUI={true}
+        >
+          {spots.map((spot) => (
+            <AdvancedMarkerComponent
+              key={spot.id}
+              position={{ lat: spot.lat, lng: spot.lng }}
+              imageSrc={DefaultAvatar}
+              onClick={() => handleMarkerClick(spot)}
+            />
+          ))}
+        </Map>
+      </APIProvider>
+      <ChatModal isOpen={isOpen} onClose={onClose} currentHotspot={currentHotspot} />
+    </div>
+
   );
+  
 }
