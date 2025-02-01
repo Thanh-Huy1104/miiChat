@@ -4,6 +4,8 @@ import Modal from "react-modal";
 import { getMessages } from "../services/chat.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { sendMessages } from "../services/messages.service";
+import { useAuth } from "../context/authContext";
 
 // Set the root element for accessibility (do this once in your app, usually in App.jsx)
 Modal.setAppElement("#root");
@@ -11,6 +13,8 @@ Modal.setAppElement("#root");
 const ChatModal = ({ isOpen, onClose, currentHotspot }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const {user} = useAuth();
+
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -21,9 +25,16 @@ const ChatModal = ({ isOpen, onClose, currentHotspot }) => {
     fetchMessages();
   }, [currentHotspot]);
 
-  const sendMessage = () => {
-    console.log("Sending message...", input);
-    setInput("");
+  const handleSendMessage = async() => {
+    if (user){
+      const createMessageDTO = {
+        chatID: currentHotspot.chatID,
+        content: input,
+        senderID: user.userID,
+      }
+      await sendMessages(createMessageDTO);
+      setInput("");
+    }
   };
   return (
     <Modal
