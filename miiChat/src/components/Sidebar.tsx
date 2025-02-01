@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useAuth } from "../context/authContext";
 import Login from "./Login";
-import Voting from "./Vote";
+import HotspotList from "./HotSpotList";
 
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -53,6 +53,8 @@ export default function Sidebar() {
               setIsExpanded(true);
               setActiveComponent("voting");
             }
+            setIsExpanded(true);
+            setActiveComponent("hotspotList");
           }}
           className={`flex items-center justify-center w-12 h-12 rounded-lg transition my-2 ${
             userID
@@ -85,13 +87,9 @@ export default function Sidebar() {
       </div>
 
       {/* Expandable Content Panel */}
-      <div
-        className={`flex-grow bg-[#F5F5F5] p-4 transition-opacity duration-300 ${
-          isExpanded ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-      >
+      <div className={`flex-grow bg-[#F5F5F5] p-4 transition-opacity duration-300 overflow-y-auto scrollbar-thin ${isExpanded ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
         {activeComponent === "login" && <Login />}
-        {userID && activeComponent === "voting" && <Voting />}
+        {activeComponent === "hotspotList" && <HotspotList />}
       </div>
     </div>
   );
