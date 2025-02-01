@@ -1,14 +1,15 @@
 import {
+  faCheckToSlot,
+  faGear,
   faLocationDot,
   faLocationPin,
-  faStar,
-  faUser,
+  faUser
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import { useAuth } from "../context/authContext";
 import Login from "./Login";
 import Voting from "./Vote";
-import { useAuth } from "../context/authContext";
 
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -17,7 +18,7 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`fixed left-0 top-0 h-full transition-all duration-100 z-50 flex ${
+      className={`fixed left-0 top-0 h-full transition-all duration-100 z-50 flex rounded-r-full ${
         isExpanded ? "w-96" : "w-16"
       }`}
     >
@@ -30,6 +31,7 @@ export default function Sidebar() {
           <FontAwesomeIcon
             icon={isExpanded ? faLocationPin : faLocationDot}
             size="lg"
+            color="#050505"
           />
         </button>
 
@@ -41,7 +43,7 @@ export default function Sidebar() {
           }}
           className="flex items-center justify-center w-12 h-12 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-200 transition my-2"
         >
-          <FontAwesomeIcon icon={faUser} size="lg" />
+          <FontAwesomeIcon icon={faUser} size="lg" color="#050505" />
         </button>
 
         {/* Voting Button (Disabled if not logged in) */}
@@ -59,7 +61,26 @@ export default function Sidebar() {
           }`}
           disabled={!userID}
         >
-          <FontAwesomeIcon icon={faStar} size="lg" />
+          <FontAwesomeIcon icon={faCheckToSlot} size="lg" color="#050505" />
+        </button>
+
+        {/* Settings Button (Disabled if not logged in) */}
+        <button
+          onClick={() => {
+            if (userID) {
+              setIsExpanded(true);
+              setActiveComponent("settings");
+            }
+          }}
+          className={`flex items-center justify-center w-12 h-12 rounded-lg transition my-2 ${
+            userID
+              ? "text-gray-600 hover:text-gray-900 hover:bg-gray-200"
+              : "text-gray-300 cursor-not-allowed opacity-50"
+          }`}
+          disabled={!userID}
+        >
+          <FontAwesomeIcon icon={faGear} size="lg"             color="#050505"
+ />
         </button>
       </div>
 
