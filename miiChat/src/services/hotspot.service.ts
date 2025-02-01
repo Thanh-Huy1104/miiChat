@@ -14,6 +14,18 @@ export interface IHotspot {
     createdAt: Date;
     expiryDate: Date;
   }
+export interface createHotspotDTO {
+    name: string;
+    coordinates: Array<number>;
+    description: string;
+    address: string;
+    tags: Array<string>;
+    numVotes: number;
+    backgroundImg: string;
+    isActive: boolean;
+    createdAt: Date;
+    expiryDate: Date;
+  }
 
 export const getActiveHotspots = async (): Promise<IHotspot[]> => {
   try {
@@ -33,4 +45,24 @@ export const getActiveHotspots = async (): Promise<IHotspot[]> => {
     console.error("Error fetching active hotspots:", error);
     return [];
   }
+};
+
+export const createHotspot = async (createHotspotDTO : createHotspotDTO) => {
+    try {
+        const response = await fetch(`${url}/api/hotspots/createHotspot`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(createHotspotDTO),
+        });
+
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error("Failed to fetch messages");
+        }
+    } catch (error) {
+        console.error(error);
+    }
 };
