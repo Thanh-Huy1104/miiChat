@@ -1,28 +1,38 @@
 // src/components/ChatModal.jsx
-import { useEffect, useState } from 'react';
-import Modal from 'react-modal';
-import { getMessages } from '../services/chat.service';
+import { useEffect, useState } from "react";
+import Modal from "react-modal";
+import { getMessages } from "../services/chat.service";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 // Set the root element for accessibility (do this once in your app, usually in App.jsx)
-Modal.setAppElement('#root');
+Modal.setAppElement("#root");
 
 const ChatModal = ({ isOpen, onClose, currentHotspot }) => {
   const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+
   useEffect(() => {
-    const fetchMessages = async() => {
-      const messages = await getMessages(currentHotspot);
+    const fetchMessages = async () => {
+      //const messages = await getMessages(currentHotspot);
       setMessages(messages);
-    } 
+    };
+    console.log("Fetching messages...", isOpen);
     fetchMessages();
-  }, [currentHotspot])
-    return (
+  }, [currentHotspot]);
+
+  const sendMessage = () => {
+    console.log("Sending message...", input);
+    setInput("");
+  };
+  return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
-      className="bg-white p-6 rounded-2xl shadow-xl max-w-lg w-full mx-auto mt-20"
-      overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+      className="bg-white p-6 flex-1 rounded-2xl shadow-xl max-w-xl h-[70%] w-full mx-auto absolute z-50"
+      overlayClassName="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
     >
-      <div className="flex flex-col h-96">
+      <div className="flex-1 h-full">
         {/* Chat Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-xl font-bold">Chat</h2>
@@ -30,7 +40,7 @@ const ChatModal = ({ isOpen, onClose, currentHotspot }) => {
             onClick={onClose}
             className="text-gray-500 hover:text-gray-800"
           >
-            ✖
+            <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
 
@@ -48,10 +58,12 @@ const ChatModal = ({ isOpen, onClose, currentHotspot }) => {
         <div className="flex items-center p-4 border-t">
           <input
             type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
             placeholder="Type your message..."
             className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring"
           />
-          <button className="ml-2 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+          <button onClick={sendMessage} className="ml-2 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
             Send
           </button>
         </div>

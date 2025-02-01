@@ -192,10 +192,11 @@ const spots = [
   },
 ];
 
-export default function MapComponent({}) {
+export default function MapComponent() {
   const handleMarkerClick = (spot) => {
     setIsOpen(true);
     setCurrentHotspot(spot);
+    console.log(spot);
   };
   const [isOpen, setIsOpen] = useState(false);
   const [currentHotspot, setCurrentHotspot] = useState("");
