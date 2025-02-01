@@ -1,5 +1,7 @@
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import MapStyle from "../../src/assets/mapstyles/mapStyle.json";
+import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
+
 const mapContainerStyle = {
   width: "100%",
   height: "100vh",
@@ -16,25 +18,19 @@ const spots = [
 
 export default function MapComponent() {
   return (
-    <LoadScript googleMapsApiKey="AIzaSyBGruP6k6Ypxn3TuP0JgUKPuahFwjuzSDI">
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        zoom={12}
-        center={center}
-        options={{
-          styles: MapStyle,
-          disableDefaultUI: true,
-          draggingCursor: "pointer",
-        }}
+    <APIProvider apiKey={"AIzaSyBGruP6k6Ypxn3TuP0JgUKPuahFwjuzSDI"}>
+      <Map
+        style={{ width: "100vw", height: "100vh" }}
+        defaultCenter={center}
+        defaultZoom={13}
+        gestureHandling={"greedy"}
+        disableDefaultUI={true}
+        styles={MapStyle}
       >
         {spots.map((spot) => (
-          <Marker
-            key={spot.id}
-            position={{ lat: spot.lat, lng: spot.lng }}
-            onClick={() => {}}
-          />
+          <Marker key={spot.id} position={{ lat: spot.lat, lng: spot.lng }} />
         ))}
-      </GoogleMap>
-    </LoadScript>
+      </Map>
+    </APIProvider>
   );
 }
