@@ -105,7 +105,7 @@ export default function Login() {
 
               {/* Custom Popover */}
               {isPopoverOpen && (
-                <div className="absolute top-20 bg-white shadow-lg rounded-lg items-center justify-center gap-2 border border-gray-200">
+                <div className="absolute w-[77%] top-20 bg-white shadow-lg rounded-lg items-center justify-center gap-2 border border-gray-200">
                   {avatars.map((image, index) => (
                     <button
                       key={index}
