@@ -11,10 +11,10 @@ const center = {
 };
 
 export default function MapComponent() {
-
   const [activeHotspots, setActiveHotspots] = useState<IHotspot[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [currentActiveHotspot, setCurrentActiveHotspot] = useState<IHotspot | null>(null);
+  const [currentActiveHotspot, setCurrentActiveHotspot] =
+    useState<IHotspot | null>(null);
   const onClose = () => {
     setIsOpen(false);
   };
