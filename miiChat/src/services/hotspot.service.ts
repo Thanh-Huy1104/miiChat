@@ -67,14 +67,14 @@ export const getInactiveHotspots = async (): Promise<IHotspot[]> => {
     }
   };
 
-export const upvoteHotspot = async (hotspotID: string) => {
+export const upvoteHotspot = async (hotspotID: string, userID: string) => {
     try {
         const response = await fetch(`${url}/api/hotspots/upvote`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ hotspotID }),
+            body: JSON.stringify({ hotspotID, userID }),
         });
 
         if (!response.ok) {
@@ -85,14 +85,14 @@ export const upvoteHotspot = async (hotspotID: string) => {
     }
 };
 
-export const downvoteHotspot = async (hotspotID: string) => {
+export const downvoteHotspot = async (hotspotID: string, userID: string) => {
   try {
       const response = await fetch(`${url}/api/hotspots/downvote`, {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
           },
-          body: JSON.stringify({ hotspotID }),
+          body: JSON.stringify({ hotspotID, userID }),
       });
 
       if (!response.ok) {
