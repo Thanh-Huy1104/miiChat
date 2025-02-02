@@ -1,16 +1,23 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
-import { getHotspot } from "../services/hotspot.service";
+import {
+  downvoteHotspot,
+  getHotspot,
+  upvoteHotspot,
+} from "../services/hotspot.service";
 
 export default function Voting({ hotspot }) {
   const [userVote, setUserVote] = useState(null); // Tracks user vote ('upvote' or 'downvote')
   const [currentVotes, setCurrentVotes] = useState(hotspot.numVotes); // Manage total votes locally
+  const [isUpvoted, setIsUpvoted] = useState(false);
+  const [isDownvoted, setIsDownvoted] = useState(false);
 
   useEffect(() => {
     const fetchNumVotes = async () => {
       const fetchHotspot = await getHotspot(hotspot.hotSpotID);
       setCurrentVotes(fetchHotspot.numVotes);
+      console.log("New Votes:", fetchHotspot.numVotes);
     };
 
     fetchNumVotes();
@@ -18,6 +25,34 @@ export default function Voting({ hotspot }) {
 
     return () => clearInterval(interval);
   }, []);
+
+  const handleUpvote = () => {
+    if (isUpvoted) {
+      downvoteHotspot(hotspot.hotSpotID);
+      setCurrentVotes(currentVotes - 1);
+      setIsUpvoted(false);
+    } else {
+      upvoteHotspot(hotspot.hotSpotID);
+      if (isDownvoted) upvoteHotspot(hotspot.hotSpotID);
+      setCurrentVotes(currentVotes + (isDownvoted ? 2 : 1));
+      setIsUpvoted(true);
+      setIsDownvoted(false);
+    }
+  };
+
+  const handleDownvote = () => {
+    if (isDownvoted) {
+      upvoteHotspot(hotspot.hotSpotID);
+      setCurrentVotes(currentVotes + 1);
+      setIsDownvoted(false);
+    } else {
+      downvoteHotspot(hotspot.hotSpotID);
+      if (isUpvoted) downvoteHotspot(hotspot.hotSpotID);
+      setCurrentVotes(currentVotes - (isUpvoted ? 2 : 1));
+      setIsDownvoted(true);
+      setIsUpvoted(false);
+    }
+  };
 
   const handleVote = (type) => {
     setCurrentVotes((prevVotes) => {
@@ -64,7 +99,7 @@ export default function Voting({ hotspot }) {
         <div className="flex flex-col space-y-2">
           {/* Upvote Button */}
           <button
-            onClick={() => handleVote("upvote")}
+            onClick={() => handleUpvote()}
             className={`p-2 rounded-full border transition ${
               userVote === "upvote"
                 ? "bg-green-500 text-white"
@@ -76,7 +111,7 @@ export default function Voting({ hotspot }) {
 
           {/* Downvote Button */}
           <button
-            onClick={() => handleVote("downvote")}
+            onClick={() => handleDownvote()}
             className={`p-2 rounded-full border transition ${
               userVote === "downvote"
                 ? "bg-red-500 text-white"
