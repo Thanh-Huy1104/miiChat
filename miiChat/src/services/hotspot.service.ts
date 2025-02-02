@@ -123,6 +123,24 @@ export const getHotspot = async (hotspotID: string) => {
     }
 };
 
+export const deactivateHotspot = async (hotspotID: string) => {
+    try {
+        const response = await fetch(`${url}/api/hotspots/deactivateHotspot`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ hotspotID }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to deactivate hotspot");
+        }
+    } catch (error) {
+        console.error("Error deactivating hotspot:", error);
+    }
+};
+
 export const createHotspot = async (createHotspotDTO : createHotspotDTO) => {
     try {
         const response = await fetch(`${url}/api/hotspots/createHotspot`, {

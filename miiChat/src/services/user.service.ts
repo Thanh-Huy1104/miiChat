@@ -15,6 +15,10 @@ export type updateUserDto = {
   userID: string;
   username?: string;
   password?: string;
+}
+export type Vote = {
+  hotspotID: string;
+  isUpvote: boolean;
 };
 
 export interface IUser {
@@ -23,7 +27,7 @@ export interface IUser {
   password: string;
   profileImg: number;
   HotspotIDs: string[];
-  Votes: string[];
+  Votes: Vote[];
   createdAt: Date;
   createdHotspot: boolean;
 }

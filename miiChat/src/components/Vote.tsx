@@ -12,7 +12,7 @@ export default function Voting({ hotspot }) {
   const { user } = useAuth();
 
   const [userVote, setUserVote] = useState<string | null>(null); // Tracks user vote ('upvote' or 'downvote')
-  const [currentVotes, setCurrentVotes] = useState(hotspot.numVotes); // Manage total votes locally
+  const [currentVotes, setCurrentVotes] = useState(hotspot.numVotes);
 
   useEffect(() => {
     const fetchNumVotes = async () => {
@@ -21,6 +21,11 @@ export default function Voting({ hotspot }) {
       console.log("New Votes:", fetchHotspot.numVotes);
     };
 
+    user?.Votes.map((vote) => {
+      if (vote.hotspotID === hotspot.hotSpotID) {
+        setUserVote(vote.isUpvote ? "upvote" : "downvote");
+      }
+    });
     fetchNumVotes();
     const interval = setInterval(fetchNumVotes, 5000);
 
@@ -28,81 +33,20 @@ export default function Voting({ hotspot }) {
   }, []);
 
   const handleUpvote = () => {
-    console.log(userVote);
-    console.log(currentVotes);
-
-    //type is upvote always
-
-    // if userVote is not upvote and currentvotes is 5, do nothing
-    if (userVote !== "upvote" && currentVotes >= 5) {
-      return;
-    }
-
-    //if uservote is null, just do it
-    if (!userVote) {
-      setUserVote("upvote");
+    setUserVote("upvote");
+    if (user) {
       upvoteHotspot(hotspot.hotSpotID, user?.userID);
-      setCurrentVotes((prevVotes: number) => {
-        return prevVotes + 1;
-      });
-    }
-
-    // if userVote is upvote, undo it
-    if (userVote === "upvote") {
-      setUserVote(null);
-      downvoteHotspot(hotspot.hotSpotID, user?.userID);
-      setCurrentVotes((prevVotes: number) => {
-        return prevVotes - 1;
-      });
-    }
-
-    // if userVote is downvote, undo it and add a upvote
-    if (userVote === "downvote") {
-      upvoteHotspot(hotspot.hotSpotID);
-      upvoteHotspot(hotspot.hotSpotID);
-      setUserVote("upvote");
-      setCurrentVotes((prevVotes: number) => {
-        return prevVotes + 2;
-      });
+    } else {
+      console.log("User not logged in");
     }
   };
 
-  const handleDownvote = () => {
-    console.log(userVote);
-    console.log(currentVotes);
-
-    //type is downvote always
-
-    // if userVote is not downvote and currentvotes is 0, do nothing
-    if (userVote !== "downvote" && currentVotes <= 0) {
-      return;
-    }
-
-    if (!userVote) {
-      setUserVote("downvote");
-      downvoteHotspot(hotspot.hotSpotID);
-      setCurrentVotes((prevVotes: number) => {
-        return prevVotes - 1;
-      });
-    }
-
-    // if userVote is downvote, undo it
-    if (userVote === "downvote") {
-      setUserVote(null);
-      upvoteHotspot(hotspot.hotSpotID);
-      setCurrentVotes((prevVotes: number) => {
-        return prevVotes + 1;
-      });
-    }
-
-    // if userVote is upvote, undo it and add a downvote
-    if (userVote === "upvote") {
-      downvoteHotspot(hotspot.hotSpotID);
-      downvoteHotspot(hotspot.hotSpotID);
-      setUserVote("downvote");
-      setCurrentVotes((prevVotes: number) => {
-        return prevVotes - 2;
-      });
+  const handleDownVote = () => {
+    setUserVote("downvote");
+    if (user) {
+      downvoteHotspot(hotspot.hotSpotID, user?.userID);
+    } else {
+      console.log("User not logged in");
     }
   };
 
@@ -136,18 +80,20 @@ export default function Voting({ hotspot }) {
                 ? "bg-green-500 text-white"
                 : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
             }`}
+            disabled={userVote !== null}
           >
             <FontAwesomeIcon icon={faArrowUp} />
           </button>
 
           {/* Downvote Button */}
           <button
-            onClick={() => handleDownvote()}
+            onClick={() => handleDownVote()}
             className={`w-10 h-10 p-2 rounded-full border transition ${
               userVote === "downvote"
                 ? "bg-red-500 text-white"
                 : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
             }`}
+            disabled={userVote !== null}
           >
             <FontAwesomeIcon icon={faArrowDown} />
           </button>
