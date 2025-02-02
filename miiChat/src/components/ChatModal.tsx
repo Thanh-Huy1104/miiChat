@@ -93,9 +93,14 @@ const ChatModal = ({
       try {
         if (currentHotspot?.chatID) {
           console.log("Fetching messages...", currentHotspot.chatID);
-          const messages = await getMessages(currentHotspot.chatID);
-          console.log("Fetched messages:", messages.messages);
-          setMessages(messages.messages);
+          const incomingMessages = await getMessages(currentHotspot.chatID);
+          console.log("Fetched messages:", incomingMessages.messages);
+          if (messages && incomingMessages && messages.length !== incomingMessages.messages.length) {
+            if (messagesEndRef.current) {
+              messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+            }
+            setMessages(incomingMessages.messages);
+          }
         }
       } catch (error) {
         console.error("Error fetching messages:", error);
@@ -103,12 +108,12 @@ const ChatModal = ({
     };
 
     if (isOpen) {
-      fetchMessages(); // Fetch immediately when modal opens
+      fetchMessages();
 
       intervalId = setInterval(() => {
         console.log("Fetching messages...", messages);
         fetchMessages();
-      }, 5000); // Fetch every 5 seconds
+      }, 5000);
     }
 
     return () => {
@@ -120,7 +125,7 @@ const ChatModal = ({
   }, [currentHotspot, isOpen]);
 
   const handleSendMessage = async () => {
-    if (user && input.trim()) {
+    if (user && input) {
       const createMessageDTO = {
         chatID: currentHotspot.chatID,
         content: input,
@@ -130,7 +135,6 @@ const ChatModal = ({
       await sendMessages(createMessageDTO);
       setInput("");
 
-      // **Manually scroll after sending**
       setTimeout(() => {
         if (messagesEndRef.current) {
           messagesEndRef.current.scrollIntoView({ behavior: "smooth" });

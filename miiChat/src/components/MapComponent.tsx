@@ -32,7 +32,7 @@ export default function MapComponent() {
       setActiveHotspots(hotspots);
     };
 
-    fetchHotspots();
+    fetchHotspots(); 
     const interval = setInterval(fetchHotspots, 5000);
 
     return () => clearInterval(interval);
