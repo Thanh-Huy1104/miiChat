@@ -96,7 +96,15 @@ export default function Sidebar() {
           }}
           className="flex items-center justify-center w-12 h-12 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-200 transition my-2"
         >
-          <FontAwesomeIcon icon={faUser} size="lg" color="#050505" />
+          {user ? (
+            <img
+              src={avatars[user.user.profileImg]}
+              alt="Avatar"
+              className="w-8 h-8 rounded-full"
+            />
+          ) : (
+            <FontAwesomeIcon icon={faUser} size="lg" color="#050505" />
+          )}
         </button>
 
         {/* Voting Button (Disabled if not logged in) */}
