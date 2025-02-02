@@ -6,8 +6,11 @@ import {
   getHotspot,
   upvoteHotspot,
 } from "../services/hotspot.service";
+import { useAuth } from "../context/authContext";
 
 export default function Voting({ hotspot }) {
+  const { user } = useAuth();
+
   const [userVote, setUserVote] = useState<string | null>(null); // Tracks user vote ('upvote' or 'downvote')
   const [currentVotes, setCurrentVotes] = useState(hotspot.numVotes); // Manage total votes locally
 
@@ -31,30 +34,36 @@ export default function Voting({ hotspot }) {
     //type is upvote always
 
     // if userVote is not upvote and currentvotes is 5, do nothing
-    if (userVote !== 'upvote' && currentVotes >= 5) {
-      return
+    if (userVote !== "upvote" && currentVotes >= 5) {
+      return;
     }
 
     //if uservote is null, just do it
     if (!userVote) {
-      setUserVote('upvote');
-      upvoteHotspot(hotspot.hotSpotID);
-      setCurrentVotes( (prevVotes: number) => { return prevVotes + 1 })
+      setUserVote("upvote");
+      upvoteHotspot(hotspot.hotSpotID, user?.userID);
+      setCurrentVotes((prevVotes: number) => {
+        return prevVotes + 1;
+      });
     }
 
     // if userVote is upvote, undo it
-    if (userVote === 'upvote') {
+    if (userVote === "upvote") {
       setUserVote(null);
-      downvoteHotspot(hotspot.hotSpotID);
-      setCurrentVotes((prevVotes: number) => { return prevVotes - 1 })
+      downvoteHotspot(hotspot.hotSpotID, user?.userID);
+      setCurrentVotes((prevVotes: number) => {
+        return prevVotes - 1;
+      });
     }
 
     // if userVote is downvote, undo it and add a upvote
-    if (userVote === 'downvote') {
+    if (userVote === "downvote") {
       upvoteHotspot(hotspot.hotSpotID);
       upvoteHotspot(hotspot.hotSpotID);
-      setUserVote('upvote');
-      setCurrentVotes( (prevVotes: number) => { return prevVotes + 2})
+      setUserVote("upvote");
+      setCurrentVotes((prevVotes: number) => {
+        return prevVotes + 2;
+      });
     }
   };
 
@@ -65,30 +74,35 @@ export default function Voting({ hotspot }) {
     //type is downvote always
 
     // if userVote is not downvote and currentvotes is 0, do nothing
-    if (userVote !== 'downvote' && currentVotes <= 0) {
-      return
+    if (userVote !== "downvote" && currentVotes <= 0) {
+      return;
     }
 
     if (!userVote) {
-      setUserVote('downvote');
+      setUserVote("downvote");
       downvoteHotspot(hotspot.hotSpotID);
-      setCurrentVotes( (prevVotes: number) => { return prevVotes - 1 })
+      setCurrentVotes((prevVotes: number) => {
+        return prevVotes - 1;
+      });
     }
 
-
     // if userVote is downvote, undo it
-    if (userVote === 'downvote') {
+    if (userVote === "downvote") {
       setUserVote(null);
       upvoteHotspot(hotspot.hotSpotID);
-      setCurrentVotes((prevVotes: number) => { return prevVotes + 1 })
+      setCurrentVotes((prevVotes: number) => {
+        return prevVotes + 1;
+      });
     }
 
     // if userVote is upvote, undo it and add a downvote
-    if (userVote === 'upvote') {
+    if (userVote === "upvote") {
       downvoteHotspot(hotspot.hotSpotID);
       downvoteHotspot(hotspot.hotSpotID);
-      setUserVote('downvote');
-      setCurrentVotes( (prevVotes: number) => { return prevVotes - 2})
+      setUserVote("downvote");
+      setCurrentVotes((prevVotes: number) => {
+        return prevVotes - 2;
+      });
     }
   };
 
