@@ -8,10 +8,8 @@ import {
 } from "../services/hotspot.service";
 
 export default function Voting({ hotspot }) {
-  const [userVote, setUserVote] = useState(null); // Tracks user vote ('upvote' or 'downvote')
+  const [userVote, setUserVote] = useState<string | null>(null); // Tracks user vote ('upvote' or 'downvote')
   const [currentVotes, setCurrentVotes] = useState(hotspot.numVotes); // Manage total votes locally
-  const [isUpvoted, setIsUpvoted] = useState(false);
-  const [isDownvoted, setIsDownvoted] = useState(false);
 
   useEffect(() => {
     const fetchNumVotes = async () => {
@@ -27,52 +25,71 @@ export default function Voting({ hotspot }) {
   }, []);
 
   const handleUpvote = () => {
-    if (isUpvoted) {
-      downvoteHotspot(hotspot.hotSpotID);
-      setCurrentVotes(currentVotes - 1);
-      setIsUpvoted(false);
-    } else {
+    console.log(userVote);
+    console.log(currentVotes);
+
+    //type is upvote always
+
+    // if userVote is not upvote and currentvotes is 5, do nothing
+    if (userVote !== 'upvote' && currentVotes >= 5) {
+      return
+    }
+
+    //if uservote is null, just do it
+    if (!userVote) {
+      setUserVote('upvote');
       upvoteHotspot(hotspot.hotSpotID);
-      if (isDownvoted) upvoteHotspot(hotspot.hotSpotID);
-      setCurrentVotes(currentVotes + (isDownvoted ? 2 : 1));
-      setIsUpvoted(true);
-      setIsDownvoted(false);
+      setCurrentVotes( (prevVotes: number) => { return prevVotes + 1 })
+    }
+
+    // if userVote is upvote, undo it
+    if (userVote === 'upvote') {
+      setUserVote(null);
+      downvoteHotspot(hotspot.hotSpotID);
+      setCurrentVotes((prevVotes: number) => { return prevVotes - 1 })
+    }
+
+    // if userVote is downvote, undo it and add a upvote
+    if (userVote === 'downvote') {
+      upvoteHotspot(hotspot.hotSpotID);
+      upvoteHotspot(hotspot.hotSpotID);
+      setUserVote('upvote');
+      setCurrentVotes( (prevVotes: number) => { return prevVotes + 2})
     }
   };
 
   const handleDownvote = () => {
-    if (isDownvoted) {
-      upvoteHotspot(hotspot.hotSpotID);
-      setCurrentVotes(currentVotes + 1);
-      setIsDownvoted(false);
-    } else {
-      downvoteHotspot(hotspot.hotSpotID);
-      if (isUpvoted) downvoteHotspot(hotspot.hotSpotID);
-      setCurrentVotes(currentVotes - (isUpvoted ? 2 : 1));
-      setIsDownvoted(true);
-      setIsUpvoted(false);
+    console.log(userVote);
+    console.log(currentVotes);
+
+    //type is downvote always
+
+    // if userVote is not downvote and currentvotes is 0, do nothing
+    if (userVote !== 'downvote' && currentVotes <= 0) {
+      return
     }
-  };
 
-  const handleVote = (type) => {
-    setCurrentVotes((prevVotes) => {
-      if (userVote === type) {
-        // If already voted the same way, undo it
-        setUserVote(null);
-        return type === "upvote" ? prevVotes - 1 : prevVotes + 1;
-      } else {
-        // If switching votes (e.g., upvote → downvote), adjust accordingly
-        if (userVote === "upvote") {
-          return prevVotes - 2; // Remove previous upvote, apply downvote
-        } else if (userVote === "downvote") {
-          return prevVotes + 2; // Remove previous downvote, apply upvote
-        }
+    if (!userVote) {
+      setUserVote('downvote');
+      downvoteHotspot(hotspot.hotSpotID);
+      setCurrentVotes( (prevVotes: number) => { return prevVotes - 1 })
+    }
 
-        // Otherwise, just apply the new vote
-        setUserVote(type);
-        return type === "upvote" ? prevVotes + 1 : prevVotes - 1;
-      }
-    });
+
+    // if userVote is downvote, undo it
+    if (userVote === 'downvote') {
+      setUserVote(null);
+      upvoteHotspot(hotspot.hotSpotID);
+      setCurrentVotes((prevVotes: number) => { return prevVotes + 1 })
+    }
+
+    // if userVote is upvote, undo it and add a downvote
+    if (userVote === 'upvote') {
+      downvoteHotspot(hotspot.hotSpotID);
+      downvoteHotspot(hotspot.hotSpotID);
+      setUserVote('downvote');
+      setCurrentVotes( (prevVotes: number) => { return prevVotes - 2})
+    }
   };
 
   // For demonstration, we'll assume max possible votes are 100
