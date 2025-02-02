@@ -4,6 +4,7 @@ import AdvancedMarkerComponent from "./AdvancedMarker";
 import ChatModal from "./ChatModal";
 import { useEffect, useState } from "react";
 import { getActiveHotspots, IHotspot } from "../services/hotspot.service";
+import { useAuth } from "../context/authContext";
 
 const center = {
   lat: 45.497406,
@@ -18,8 +19,10 @@ export default function MapComponent() {
   const onClose = () => {
     setIsOpen(false);
   };
+  const { user } = useAuth();
 
   const handleMarkerClick = (hotspot: IHotspot) => {
+    if (!user) return;
     setIsOpen(true);
     setCurrentActiveHotspot(hotspot);
     console.log(hotspot);
