@@ -2,7 +2,7 @@ import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import DefaultAvatar from "../../src/assets/images/default-notion.png";
 import AdvancedMarkerComponent from "./AdvancedMarker";
 import ChatModal from "./ChatModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getActiveHotspots, IHotspot } from "../services/hotspot.service";
 
 const center = {
@@ -25,14 +25,18 @@ export default function MapComponent() {
     console.log(hotspot);
   };
 
-  setInterval(() => {
+  useEffect(() => {
     const fetchHotspots = async () => {
       const hotspots = await getActiveHotspots();
-      console.log(hotspots);
+      console.log("Fetched Hotspots:", hotspots);
       setActiveHotspots(hotspots);
     };
+
     fetchHotspots();
-  }, 5000);
+    const interval = setInterval(fetchHotspots, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div>

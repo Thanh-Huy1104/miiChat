@@ -29,7 +29,7 @@ export interface createHotspotDTO {
 
 export const getActiveHotspots = async (): Promise<IHotspot[]> => {
   try {
-    const response = await fetch(`${url}/hotspots/getActiveHotspots`, {
+    const response = await fetch(`${url}/api/hotspots/getActiveHotspots`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
