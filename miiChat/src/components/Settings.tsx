@@ -1,115 +1,81 @@
 import { useState } from "react";
 import { useAuth } from "../context/authContext";
+import { updateUser } from "../services/user.service";
 
 export default function Settings() {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const { user } = useAuth();
-  
-    return (
-        <div className="w-72 p-4">
-        {/* Login Title */}
-        <div className="flex items-center justify-center">
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { user } = useAuth(); // Ensure these functions are available in your auth context
+
+  const handleUpdateUser = async () => {
+    if (user) {
+      const userData = {
+        userID: user.userID,
+      };
+
+      // Dynamically adding properties
+      if (username != "") {
+        userData.username = username;
+      }
+
+      if (password != "") {
+        userData.password = password;
+      }
+
+      try {
+        const updatedUser = await updateUser(userData);
+        console.log("User updated successfully:", updatedUser);
+        alert("User updated successfully!");
+      } catch (error) {
+        console.error("Error updating user:", error);
+        alert("Failed to update user.");
+      }
+    }
+  };
+
+  return (
+    <div className="w-72 p-4 mx-auto mt-10 bg-white rounded-lg shadow-lg">
+      {/* Center Content */}
+      <div className="flex flex-col items-center justify-center space-y-4">
         {user ? (
+          <>
             <h2 className="text-2xl font-bold text-gray-800">Update Account</h2>
-        ) : (
-            <h2 className="text-2xl font-bold text-gray-800"></h2>
-        )}
-        </div>
 
-        {user ? (
-        <>
-            <p className="text-gray-600 text-center">You are logged in!</p>
-            <button
-            onClick={logout}
-            className="mt-4 w-full bg-red-500 text-white p-2 rounded-lg"
-            >
-            Logout
-            </button>
-        </>
-        ) : (
-        <div className="mt-4">
-            {/* Profile Picture Selection */}
-            {!isLoggingIn ? (
-            <div className="relative flex flex-col items-center">
-                <p className="text-gray-600">Choose a Profile Picture:</p>
-                <button
-                onClick={() => setIsPopoverOpen(!isPopoverOpen)}
-                className="mt-2 rounded-full border-4 border-gray-300 p-1"
-                >
-                <img
-                    src={avatars[profileImg]}
-                    alt="Profile"
-                    className="w-16 h-16 rounded-full object-cover"
-                />
-                </button>
-
-                {/* Custom Popover */}
-                {isPopoverOpen && (
-                <div className="absolute top-20 bg-white shadow-lg rounded-lg items-center justify-center gap-2 border border-gray-200">
-                    {avatars.map((image, index) => (
-                    <button
-                        key={index}
-                        onClick={() => {
-                        setProfileImg(index);
-                        setIsPopoverOpen(false);
-                        }}
-                        className="focus:outline-none"
-                    >
-                        <img
-                        src={image}
-                        alt={`Avatar ${index + 1}`}
-                        className="w-16 h-16 rounded-full border-2 border-transparent hover:border-black "
-                        />
-                    </button>
-                    ))}
-                </div>
-                )}
-            </div>
-            ) : (
-            <></>
-            )}
-
-            {/* Username and Password Fields */}
+            {/* Username Field */}
             <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-2 mt-4 border rounded-lg focus:outline-black"
-            />
-            <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 mt-2 border rounded-lg focus:outline-black"
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
             />
 
-            {/* Login Button */}
-            <button
-            onClick={isLoggingIn ? login : createNewUser}
-            className="mt-4 w-full bg-[#050505] text-white p-2 rounded-lg hover:bg-gray-900"
-            >
-            {isLoggingIn ? "Login" : "Register"}
-            </button>
+            {/* Password Field */}
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+            />
 
-            {/* Register Button */}
-            <div className="flex items-center justify-center mt-2 w-full">
-            {isLoggingIn ? (
-                <p className="text-gray-600">Don't have an account?</p>
-            ) : (
-                <p className="text-gray-600">Already have an account?</p>
-            )}
+            {/* Update Account Button */}
             <button
-                onClick={() => setIsLoggingIn(!isLoggingIn)}
-                className="text-gray-600 p-1 rounded-lg hover:bg-gray-200"
+              onClick={() => handleUpdateUser()}
+              className="w-full bg-black text-white p-2 rounded-lg hover:bg-gray-900 transition duration-300"
             >
-                {!isLoggingIn ? "Login" : "Register"}
+              Update
             </button>
-            </div>
-        </div>
+          </>
+        ) : (
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-red-600">No User Found</h2>
+            <p className="text-gray-600 mt-2">
+              Please log in to access your settings.
+            </p>
+          </div>
         )}
+      </div>
     </div>
   );
 }

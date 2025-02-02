@@ -11,6 +11,12 @@ export interface LoginDTO {
   password: string;
 }
 
+export type updateUserDto = {
+  userID: string;
+  username?: string;
+  password?: string;
+};
+
 export interface IUser {
   userID: string;
   username: string;
@@ -49,6 +55,26 @@ export const loginUser = async (credentials: LoginDTO) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(credentials),
+    });
+
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error("Failed to create user");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updateUser = async (user: updateUserDto) => {
+  try {
+    const response = await fetch(`${url}/api/users/updateUser`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
     });
 
     if (response.ok) {
