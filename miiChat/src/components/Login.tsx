@@ -1,34 +1,34 @@
 import { useState } from "react";
 import { useAuth } from "../context/authContext";
 import { createUser, IUser, loginUser } from "../services/user.service";
+import Lottie from "react-lottie-player";
+import CheckMark from "../assets/animation/checkmark.json"
 
-import Avatar1 from '../assets/avatars/avatar1.png';
-import Avatar2 from '../assets/avatars/avatar2.png';
-import Avatar3 from '../assets/avatars/avatar3.png';
-import Avatar4 from '../assets/avatars/avatar4.png';
-import Avatar5 from '../assets/avatars/avatar5.png';
-import Avatar6 from '../assets/avatars/avatar6.png';
-import Avatar7 from '../assets/avatars/avatar7.png';
-import Avatar8 from '../assets/avatars/avatar8.png';
-import Avatar9 from '../assets/avatars/avatar9.png';
-import Avatar10 from '../assets/avatars/avatar10.png';
-import Avatar11 from '../assets/avatars/avatar11.png';
-import Avatar12 from '../assets/avatars/avatar12.png';
-import Avatar13 from '../assets/avatars/avatar13.png';
-import Avatar14 from '../assets/avatars/avatar14.png';
-import Avatar15 from '../assets/avatars/avatar15.png';
-import Avatar16 from '../assets/avatars/avatar16.png';
-import Avatar17 from '../assets/avatars/avatar17.png';
-import Avatar18 from '../assets/avatars/avatar18.png';
-import Avatar19 from '../assets/avatars/avatar19.png';
-import Avatar20 from '../assets/avatars/avatar20.png';
-import Avatar21 from '../assets/avatars/avatar21.png';
-import Avatar22 from '../assets/avatars/avatar22.png';
-import Avatar23 from '../assets/avatars/avatar23.png';
-import Avatar24 from '../assets/avatars/avatar24.png';
-import Avatar25 from '../assets/avatars/avatar25.png';
-
-
+import Avatar1 from "../assets/avatars/avatar1.png";
+import Avatar2 from "../assets/avatars/avatar2.png";
+import Avatar3 from "../assets/avatars/avatar3.png";
+import Avatar4 from "../assets/avatars/avatar4.png";
+import Avatar5 from "../assets/avatars/avatar5.png";
+import Avatar6 from "../assets/avatars/avatar6.png";
+import Avatar7 from "../assets/avatars/avatar7.png";
+import Avatar8 from "../assets/avatars/avatar8.png";
+import Avatar9 from "../assets/avatars/avatar9.png";
+import Avatar10 from "../assets/avatars/avatar10.png";
+import Avatar11 from "../assets/avatars/avatar11.png";
+import Avatar12 from "../assets/avatars/avatar12.png";
+import Avatar13 from "../assets/avatars/avatar13.png";
+import Avatar14 from "../assets/avatars/avatar14.png";
+import Avatar15 from "../assets/avatars/avatar15.png";
+import Avatar16 from "../assets/avatars/avatar16.png";
+import Avatar17 from "../assets/avatars/avatar17.png";
+import Avatar18 from "../assets/avatars/avatar18.png";
+import Avatar19 from "../assets/avatars/avatar19.png";
+import Avatar20 from "../assets/avatars/avatar20.png";
+import Avatar21 from "../assets/avatars/avatar21.png";
+import Avatar22 from "../assets/avatars/avatar22.png";
+import Avatar23 from "../assets/avatars/avatar23.png";
+import Avatar24 from "../assets/avatars/avatar24.png";
+import Avatar25 from "../assets/avatars/avatar25.png";
 
 export default function Login() {
   const { user, setUserData } = useAuth();
@@ -38,12 +38,33 @@ export default function Login() {
   const [profileImg, setProfileImg] = useState(0);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-
   const avatars = [
-    Avatar1, Avatar2, Avatar3, Avatar4, Avatar5, Avatar6, Avatar7, Avatar8, Avatar9, Avatar10,
-    Avatar11, Avatar12, Avatar13, Avatar14, Avatar15, Avatar16, Avatar17, Avatar18, Avatar19, Avatar20,
-    Avatar21, Avatar22, Avatar23, Avatar24, Avatar25,
-];
+    Avatar1,
+    Avatar2,
+    Avatar3,
+    Avatar4,
+    Avatar5,
+    Avatar6,
+    Avatar7,
+    Avatar8,
+    Avatar9,
+    Avatar10,
+    Avatar11,
+    Avatar12,
+    Avatar13,
+    Avatar14,
+    Avatar15,
+    Avatar16,
+    Avatar17,
+    Avatar18,
+    Avatar19,
+    Avatar20,
+    Avatar21,
+    Avatar22,
+    Avatar23,
+    Avatar24,
+    Avatar25,
+  ];
 
   const createNewUser = async () => {
     const newUser: IUser = await createUser({
@@ -66,7 +87,7 @@ export default function Login() {
   };
 
   return (
-    <div className="w-72 p-4">
+    <div className="w-72 p-4 h-full">
       {/* Login Title */}
       <div className="flex items-center justify-center">
         {isLoggingIn ? (
@@ -77,15 +98,22 @@ export default function Login() {
       </div>
 
       {user ? (
-        <>
+        <div className=" p-4 rounded-lg">
+          <Lottie
+            loop={false}
+            animationData={CheckMark}
+            play
+            style={{ width: 120, height: 120, margin: "auto" }}
+          />
+
           <p className="text-gray-600 text-center">You are logged in!</p>
           <button
             onClick={logout}
-            className="mt-4 w-full bg-red-500 text-white p-2 rounded-lg"
+            className=" mt-4 w-full bg-red-500 text-white p-2 rounded-lg"
           >
             Logout
           </button>
-        </>
+        </div>
       ) : (
         <div className="mt-4">
           {/* Profile Picture Selection */}

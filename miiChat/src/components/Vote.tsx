@@ -117,7 +117,7 @@ export default function Voting({ hotspot }) {
           {/* Upvote Button */}
           <button
             onClick={() => handleUpvote()}
-            className={`p-2 rounded-full border transition ${
+            className={`w-10 h-10 p-2 items-center justify-center rounded-full border transition ${
               userVote === "upvote"
                 ? "bg-green-500 text-white"
                 : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
@@ -129,7 +129,7 @@ export default function Voting({ hotspot }) {
           {/* Downvote Button */}
           <button
             onClick={() => handleDownvote()}
-            className={`p-2 rounded-full border transition ${
+            className={`w-10 h-10 p-2 rounded-full border transition ${
               userVote === "downvote"
                 ? "bg-red-500 text-white"
                 : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
