@@ -58,7 +58,7 @@ export default function Login() {
   const login = async () => {
     const user: IUser = await loginUser({ username, password });
     console.log("Logging in...");
-    setUserData(user);
+    setUserData(user.user);
   };
 
   const logout = () => {

@@ -129,11 +129,11 @@ const ChatModal = ({
   }, [currentHotspot, isOpen]);
 
   const handleSendMessage = async () => {
-    if (user?.user?.userID && input.trim()) {
+    if (user?.userID && input.trim()) {
       const createMessageDTO = {
         chatID: currentHotspot.chatID,
         content: input,
-        senderID: user.user.userID, // Ensured it's defined
+        senderID: user.userID, // Ensured it's defined
       };
 
       console.log("Sending message:", createMessageDTO);
@@ -180,13 +180,13 @@ const ChatModal = ({
             messages.map((message) => (
               <div key={message.messageID} className="flex items-end">
                 {/* If message is from the current user, show avatar on the right */}
-                {message.senderID === user?.user.userID ? (
+                {message.senderID === user?.userID ? (
                   <>
                     <div className="bg-black text-white px-3 py-1.5 rounded-2xl max-w-[75%] break-words whitespace-pre-wrap shadow-md ml-auto">
                       {message.content}
                     </div>
                     <img
-                      src={avatars[user?.user.profileImg]}
+                      src={avatars[user?.profileImg]}
                       alt="Avatar"
                       className="w-6 h-6 rounded-full ml-2"
                     />
