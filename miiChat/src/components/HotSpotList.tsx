@@ -48,7 +48,7 @@ export default function HotspotList() {
 
       {/* Render Voting Cards */}
       {inactiveHotspots.map((spot) => (
-        <Voting hotspot={spot} />
+        <Voting hotspot={spot} key={spot.hotSpotID} />
       ))}
 
       <CreateHotSpot

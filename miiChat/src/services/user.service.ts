@@ -11,13 +11,18 @@ export interface LoginDTO {
   password: string;
 }
 
+export type Vote = {
+  hotspotID: string;
+  isUpvote: boolean;
+};
+
 export interface IUser {
   userID: string;
   username: string;
   password: string;
   profileImg: number;
   HotspotIDs: string[];
-  Votes: string[];
+  Votes: Vote[];
   createdAt: Date;
   createdHotspot: boolean;
 }
