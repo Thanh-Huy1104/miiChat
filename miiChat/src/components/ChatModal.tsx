@@ -95,7 +95,11 @@ const ChatModal = ({
           console.log("Fetching messages...", currentHotspot.chatID);
           const incomingMessages = await getMessages(currentHotspot.chatID);
           console.log("Fetched messages:", incomingMessages.messages);
-          if (messages && incomingMessages && messages.length !== incomingMessages.messages.length) {
+          if (
+            messages &&
+            incomingMessages &&
+            messages.length !== incomingMessages.messages.length
+          ) {
             if (messagesEndRef.current) {
               messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
             }
@@ -113,7 +117,7 @@ const ChatModal = ({
       intervalId = setInterval(() => {
         console.log("Fetching messages...", messages);
         fetchMessages();
-      }, 5000);
+      }, 2000);
     }
 
     return () => {
