@@ -3,7 +3,11 @@ import DefaultAvatar from "../../src/assets/images/default-notion.png";
 import AdvancedMarkerComponent from "./AdvancedMarker";
 import ChatModal from "./ChatModal";
 import { useEffect, useState } from "react";
-import { getActiveHotspots, IHotspot } from "../services/hotspot.service";
+import {
+  deactivateHotspot,
+  getActiveHotspots,
+  IHotspot,
+} from "../services/hotspot.service";
 import { useAuth } from "../context/authContext";
 
 const center = {
@@ -31,11 +35,21 @@ export default function MapComponent() {
   useEffect(() => {
     const fetchHotspots = async () => {
       const hotspots = await getActiveHotspots();
-      console.log("Fetched Hotspots:", hotspots);
+      console.log("Fetched Active Hotspots:", hotspots);
       setActiveHotspots(hotspots);
+
+      hotspots.forEach((hotspot) => {
+        const expiryDate = new Date(hotspot.expiryDate); // Convert to Date object
+        const now = new Date();
+
+        if (expiryDate < now) {
+          console.log("Deactivating expired hotspot:", hotspot.hotSpotID);
+          deactivateHotspot(hotspot.hotSpotID);
+        }
+      });
     };
 
-    fetchHotspots(); 
+    fetchHotspots();
     const interval = setInterval(fetchHotspots, 5000);
 
     return () => clearInterval(interval);

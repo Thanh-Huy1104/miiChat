@@ -58,8 +58,8 @@ export default function Voting({ hotspot }) {
 
     // if userVote is downvote, undo it and add a upvote
     if (userVote === "downvote") {
-      upvoteHotspot(hotspot.hotSpotID);
-      upvoteHotspot(hotspot.hotSpotID);
+      upvoteHotspot(hotspot.hotSpotID, user?.userID);
+      upvoteHotspot(hotspot.hotSpotID, user?.userID);
       setUserVote("upvote");
       setCurrentVotes((prevVotes: number) => {
         return prevVotes + 2;
@@ -80,7 +80,7 @@ export default function Voting({ hotspot }) {
 
     if (!userVote) {
       setUserVote("downvote");
-      downvoteHotspot(hotspot.hotSpotID);
+      downvoteHotspot(hotspot.hotSpotID, user?.userID);
       setCurrentVotes((prevVotes: number) => {
         return prevVotes - 1;
       });
@@ -89,7 +89,7 @@ export default function Voting({ hotspot }) {
     // if userVote is downvote, undo it
     if (userVote === "downvote") {
       setUserVote(null);
-      upvoteHotspot(hotspot.hotSpotID);
+      upvoteHotspot(hotspot.hotSpotID, user?.userID);
       setCurrentVotes((prevVotes: number) => {
         return prevVotes + 1;
       });
@@ -97,8 +97,8 @@ export default function Voting({ hotspot }) {
 
     // if userVote is upvote, undo it and add a downvote
     if (userVote === "upvote") {
-      downvoteHotspot(hotspot.hotSpotID);
-      downvoteHotspot(hotspot.hotSpotID);
+      downvoteHotspot(hotspot.hotSpotID, user?.userID);
+      downvoteHotspot(hotspot.hotSpotID, user?.userID);
       setUserVote("downvote");
       setCurrentVotes((prevVotes: number) => {
         return prevVotes - 2;
