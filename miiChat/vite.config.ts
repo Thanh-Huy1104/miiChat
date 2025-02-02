@@ -5,7 +5,16 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    port: process.env.PORT || 10000, // Use Render's dynamic PORT, fallback to 10000 for local dev
-    host: "0.0.0.0", // Important for Render to detect the open port
+    port: process.env.PORT || 10000,
+    host: "0.0.0.0",
+    strictPort: true,
+    allowedHosts: ["miichat.onrender.com"],
+    cors: true,
+  },
+  preview: {
+    host: "0.0.0.0",
+    port: 10000,
+    allowedHosts: ["miichat.onrender.com"],
+    cors: true,
   },
 });
