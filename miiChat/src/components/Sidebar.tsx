@@ -1,17 +1,16 @@
 import {
   faCheckToSlot,
   faGear,
-  faLocationDot,
-  faLocationPin,
-  faUser,
+  faUser
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import Lottie from "react-lottie-player";
+import LocationDot from "../assets/animation/dot.json";
 import { useAuth } from "../context/authContext";
 import HotspotList from "./HotSpotList";
 import Login from "./Login";
-import Lottie from "react-lottie-player";
-import LocationDot from "../assets/animation/dot.json";
+import Settings from "./Settings";
 
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -52,10 +51,6 @@ export default function Sidebar() {
         {/* Voting Button (Disabled if not logged in) */}
         <button
           onClick={() => {
-            if (user) {
-              setIsExpanded(true);
-              setActiveComponent("voting");
-            }
             setIsExpanded(true);
             setActiveComponent("hotspotList");
           }}
@@ -96,6 +91,8 @@ export default function Sidebar() {
       >
         {activeComponent === "login" && <Login />}
         {activeComponent === "hotspotList" && <HotspotList />}
+        {activeComponent === "settings" && <Settings />}
+
       </div>
     </div>
   );
