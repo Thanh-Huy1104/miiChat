@@ -67,6 +67,7 @@ export default function Voting({ hotspot }) {
       <div className="flex justify-between items-center mb-2">
         <div>
           <h3 className="text-lg font-semibold">{hotspot.name}</h3>
+          <p className="text-sm text-gray-500">{hotspot.description}</p>
           <p className="text-sm text-gray-500">{hotspot.address}</p>
         </div>
 
