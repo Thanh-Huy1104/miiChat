@@ -23,8 +23,8 @@ export interface createHotspotDTO {
     numVotes: number;
     backgroundImg: string;
     isActive: boolean;
-    createdAt: Date;
-    expiryDate: Date;
+    createdAt?: Date;
+    expiryDate?: Date;
   }
 
 export const getActiveHotspots = async (): Promise<IHotspot[]> => {
