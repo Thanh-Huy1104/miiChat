@@ -84,7 +84,7 @@ const ChatModal = ({
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [input, setInput] = useState("");
   const { user } = useAuth();
-  const messagesEndRef = useRef<HTMLDivElement>(null); // **Ref for auto-scrolling**
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
@@ -129,27 +129,32 @@ const ChatModal = ({
   }, [currentHotspot, isOpen]);
 
   const handleSendMessage = async () => {
-    if (user && input) {
+    if (user?.user?.userID && input.trim()) {
       const createMessageDTO = {
         chatID: currentHotspot.chatID,
         content: input,
-        senderID: user.user.userID,
+        senderID: user.user.userID, // Ensured it's defined
       };
 
+      console.log("Sending message:", createMessageDTO);
       await sendMessages(createMessageDTO);
       setInput("");
 
+      // Scroll after sending
       setTimeout(() => {
         if (messagesEndRef.current) {
           messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
       }, 100);
+    } else {
+      console.error("User ID is missing or input is empty!");
     }
   };
 
   const handleChatClose = () => {
     setMessages([]);
     onClose();
+    setInput("");
   };
   return (
     <Modal
@@ -170,7 +175,7 @@ const ChatModal = ({
           </button>
         </div>
 
-        <div className="flex flex-col overflow-y-auto p-4 space-y-4 bg-white scrollbar-thin scrollbar-thumb-gray-300">
+        <div className="flex-1 flex-col overflow-y-auto p-4 space-y-4 bg-white scrollbar-thin scrollbar-thumb-gray-300">
           {messages.length > 0 ? (
             messages.map((message) => (
               <div key={message.messageID} className="flex items-end">
@@ -213,7 +218,7 @@ const ChatModal = ({
           />
           <button
             onClick={handleSendMessage}
-            className="ml-2 px-4 flex-row flex  py-2 bg-black text-white   rounded-lg hover:bg-blue-600 transition duration-200 shadow-md"
+            className="ml-2 px-4 flex-row flex  py-2 bg-black text-white rounded-lg hover:bg-blue-600 transition duration-200 shadow-md"
           >
             Send
             <div className="ml-2">
