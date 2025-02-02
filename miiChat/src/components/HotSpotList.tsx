@@ -36,9 +36,7 @@ export default function HotspotList() {
         />
 
       ))}
-
         <CreateHotSpot isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} />
-
     </div>
   );
 }

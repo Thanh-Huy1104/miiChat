@@ -20,6 +20,7 @@ export default function CreateHotSpot({
     longitude: "",
     description: "",
     address: "",
+    backgroundImg: "",
   });
 
   const handleChange = (
@@ -33,22 +34,34 @@ export default function CreateHotSpot({
     });
   };
 
+  // Function to convert image to Base64
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setFormData({ ...formData, backgroundImg: reader.result as string });
+      };
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const createHotspotDTO = {
-        name: formData.name,
-        description: formData.description,
-        coordinates: [Number(formData.latitude), Number(formData.longitude)],
-        address: formData.address,
-        tags: [],
-        numVotes: 0,
-        backgroundImg: "",
-        isActive: false,
+    const createHotspotDTO: createHotspotDTO = {
+      name: formData.name,
+      description: formData.description,
+      coordinates: [Number(formData.latitude), Number(formData.longitude)],
+      address: formData.address,
+      tags: [],
+      numVotes: 0,
+      backgroundImg: formData.backgroundImg, // Base64 image
+      isActive: false,
     };
 
     await createHotspot(createHotspotDTO);
-    console.log("Successfully created hotspot");
+    console.log("Successfully created hotspot with image");
 
     onRequestClose(); // Close modal after submission
   };
@@ -117,6 +130,29 @@ export default function CreateHotSpot({
           required
           className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-gray-800 outline-none"
         />
+
+        {/* Image Upload Input */}
+        <div>
+          <p className="text-gray-600 mb-1">Upload Background Image:</p>
+          <input
+            type="file"
+            accept="image/png, image/jpeg"
+            onChange={handleImageUpload}
+            className="w-full p-2 border rounded-lg bg-gray-100"
+          />
+        </div>
+
+        {/* Preview Image */}
+        {formData.backgroundImg && (
+          <div className="mt-2">
+            <p className="text-gray-600">Preview:</p>
+            <img
+              src={formData.backgroundImg}
+              alt="Preview"
+              className="w-full h-32 object-cover rounded-lg border"
+            />
+          </div>
+        )}
 
         {/* Buttons */}
         <div className="flex justify-end space-x-2">

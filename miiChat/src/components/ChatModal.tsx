@@ -33,29 +33,59 @@ const ChatModal = ({
   const { user } = useAuth();
 
   useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+
     const fetchMessages = async () => {
-      const messages = await getMessages(currentHotspot.chatID);
-      setMessages(messages);
+      try {
+        if (currentHotspot?.chatID) {
+          console.log("Fetching messages...", currentHotspot.chatID);
+          const messages = await getMessages(currentHotspot.chatID);
+          console.log("Fetched messages:", messages.messages);
+          setMessages(messages.messages);
+        }
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
     };
-    console.log("Fetching messages...", isOpen);
-    fetchMessages();
-  }, [currentHotspot]);
+
+    if (isOpen) {
+      fetchMessages(); // Fetch immediately when modal opens
+
+      intervalId = setInterval(() => {
+        console.log("Fetching messages...", messages);
+        fetchMessages();
+      }, 5000); // Fetch every 5 seconds
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        console.log("Stopped fetching messages.");
+      }
+    };
+  }, [currentHotspot, isOpen]);
 
   const handleSendMessage = async () => {
     if (user) {
       const createMessageDTO = {
         chatID: currentHotspot.chatID,
         content: input,
-        senderID: user.userID,
+        senderID: user.user.userID,
       };
+      console.log("Sending message...", createMessageDTO);
       await sendMessages(createMessageDTO);
       setInput("");
     }
   };
+
+  const handleChatClose = () => {
+    setMessages([]);
+    onClose();
+  }
   return (
     <Modal
       isOpen={isOpen}
-      onRequestClose={onClose}
+      onRequestClose={handleChatClose}
       className="bg-white p-6 flex-1 rounded-2xl shadow-xl max-w-xl h-[70%] w-full mx-auto absolute z-50"
       overlayClassName="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
     >
@@ -64,30 +94,29 @@ const ChatModal = ({
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-xl font-bold">Chat</h2>
           <button
-            onClick={onClose}
+            onClick={handleChatClose}
             className="text-gray-500 hover:text-gray-800"
           >
             <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
 
-        {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-gray-50">
-          {user && messages && messages.length === 0 && (
-            <>
-              {messages.map((message) => (
-                <div
-                  key={message.messageID}
-                  className={`${
-                    message.senderID === user.userID
-                      ? "self-end bg-blue-500 text-white"
-                      : "self-start bg-gray-200"
-                  } p-2 rounded-lg max-w-xs`}
-                >
-                  {message.content}
-                </div>
-              ))}
-            </>
+        <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-white flex flex-col">
+          {messages.length > 0 ? (
+            messages.map((message) => (
+              <div
+                key={message.messageID}
+                className={`${
+                  message.senderID === user?.user.userID
+                    ? "ml-auto bg-blue-500 text-white"  // Right-aligned for sender
+                    : "mr-auto bg-gray-200"  // Left-aligned for receiver
+                } px-3 py-1.5 rounded-2xl  max-w-[75%]`}
+              >
+                {message.content}
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 text-center">No messages yet.</p>
           )}
         </div>
 
