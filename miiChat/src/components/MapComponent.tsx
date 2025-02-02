@@ -56,7 +56,7 @@ export default function MapComponent() {
                 lat: hotspot.coordinates[0],
                 lng: hotspot.coordinates[1],
               }}
-              imageSrc={DefaultAvatar}
+              imageSrc={hotspot.backgroundImg || DefaultAvatar}
               onClick={() => handleMarkerClick(hotspot)}
             />
           ))}
